@@ -245,15 +245,25 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
                         )}
                     </div>
 
-                    <select
-                        value={filters.limit}
-                        onChange={(e) => handleLimit(Number(e.target.value))}
-                        className="px-3 py-2 text-sm text-gray-700 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-400/40 focus:border-red-400 cursor-pointer transition hover:bg-gray-100"
-                    >
-                        {[10, 20, 50, 100].map((n) => (
-                            <option key={n} value={n}>{n} / page</option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                        <select
+                            value={filters.limit}
+                            onChange={(e) => handleLimit(Number(e.target.value))}
+                            className="appearance-none flex items-center gap-2 w-36 pl-3 pr-8 py-2 text-sm text-gray-700 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-400/40 focus:border-red-400 cursor-pointer transition hover:bg-gray-100"
+                        >
+                            {[10, 20, 50, 100].map((n) => (
+                                <option key={n} value={n}>{n} / page</option>
+                            ))}
+                        </select>
+                        <svg
+                            className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
 
                     {hasActiveFilters && (
                         <button
