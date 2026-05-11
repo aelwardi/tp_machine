@@ -43,23 +43,24 @@ interface PokemonModalProps {
 }
 
 export default function PokemonModal({ pokedexId, onClose }: PokemonModalProps) {
-    const [pokemon, setPokemon] = useState<PokemonDetail | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [state, setState] = useState<{
+        id: number;
+        loading: boolean;
+        pokemon: PokemonDetail | null;
+    }>({ id: pokedexId, loading: true, pokemon: null });
+
+    const loading = state.loading || state.id !== pokedexId;
+    const pokemon = state.id === pokedexId ? state.pokemon : null;
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
-        setPokemon(null);
         fetch(`${BASE}/pokemons/${pokedexId}`)
             .then((r) => r.json())
             .then((data) => {
-                if (!cancelled) {
-                    setPokemon(data);
-                    setLoading(false);
-                }
+                if (!cancelled) setState({ id: pokedexId, loading: false, pokemon: data });
             })
             .catch(() => {
-                if (!cancelled) setLoading(false);
+                if (!cancelled) setState({ id: pokedexId, loading: false, pokemon: null });
             });
         return () => {
             cancelled = true;
