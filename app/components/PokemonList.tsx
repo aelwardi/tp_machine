@@ -77,9 +77,11 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
                 if (!cancelled) {
                     const list: Pokemon[] = Array.isArray(data) ? data : [];
                     if (list.length < filters.limit) setHasMore(false);
-                    setPokemons((prev) =>
-                        currentPage === 1 ? list : [...prev, ...list]
-                    );
+                    setPokemons((prev) => {
+                        if (currentPage === 1) return list;
+                        const seen = new Set(prev.map((p) => p.id));
+                        return [...prev, ...list.filter((p) => !seen.has(p.id))];
+                    });
                 }
             })
             .catch(() => {
