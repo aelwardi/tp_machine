@@ -29,7 +29,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
     });
     const [inputName, setInputName] = useState("");
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
     const [modalId, setModalId] = useState<number | null>(null);
     const [typeOpen, setTypeOpen] = useState(false);
@@ -38,6 +38,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
 
     useEffect(() => {
         const t = setTimeout(() => {
+            setLoading(true);
             setFilters((f) => ({ ...f, name: inputName }));
             setPage(1);
             setHasMore(true);
@@ -60,7 +61,6 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
 
         const currentPage = page;
         const url = new URL(`${BASE}/pokemons`);
@@ -104,6 +104,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting) {
+                    setLoading(true);
                     setPage((p) => p + 1);
                 }
             },
@@ -118,18 +119,21 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
         const newTypes = filters.types.includes(id)
             ? filters.types.filter((t) => t !== id)
             : [...filters.types, id];
+        setLoading(true);
         setFilters((f) => ({ ...f, types: newTypes }));
         setPage(1);
         setHasMore(true);
     };
 
     const clearTypes = () => {
+        setLoading(true);
         setFilters((f) => ({ ...f, types: [] }));
         setPage(1);
         setHasMore(true);
     };
 
     const resetFilters = () => {
+        setLoading(true);
         setInputName("");
         setFilters({ name: "", types: [], limit: filters.limit });
         setPage(1);
@@ -139,6 +143,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
     const hasActiveFilters = filters.name.trim() !== "" || filters.types.length > 0;
 
     const handleLimit = (val: number) => {
+        setLoading(true);
         setFilters((f) => ({ ...f, limit: val }));
         setPage(1);
         setHasMore(true);
@@ -239,7 +244,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
                                             onChange={() => toggleType(type.id)}
                                             className="w-3.5 h-3.5 accent-red-500 shrink-0"
                                         />
-                                        <Image src={type.image} alt={type.name} width={16} height={16} className="object-contain shrink-0" />
+                                        <img src={type.image} alt={type.name} width={16} height={16} className="object-contain shrink-0" />
                                         <span className="text-sm text-gray-800">{type.name}</span>
                                     </label>
                                 ))}
@@ -290,7 +295,7 @@ export default function PokemonList({ types }: { types: PokemonType[] }) {
                                     onClick={() => toggleType(id)}
                                     className="flex items-center gap-1.5 pl-2 pr-1.5 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-medium hover:bg-red-100 transition"
                                 >
-                                    <Image src={type.image} alt={type.name} width={12} height={12} className="object-contain" />
+                                    <img src={type.image} alt={type.name} width={12} height={12} className="object-contain" />
                                     {type.name}
                                     <svg className="w-3 h-3 ml-0.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
